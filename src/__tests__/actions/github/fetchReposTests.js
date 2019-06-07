@@ -52,6 +52,23 @@ describe('github fetch repos action', () => {
         expect(store.getActions()).to.deep.equal(expectedActions)
     })
 
+    it('should dispatch FETCH_REPOS_FAILURE when fetching repos returns a validation message', async () => {
+        const expected = { message: 'Validation Failed', errors: [] }
+        const expectedActions = [
+            { type: types.FETCH_REPOS_REQUEST, language: 'java' },
+            { type: types.FETCH_REPOS_FAILURE, error: expected }
+        ]
+
+        fetchMock.getOnce(`begin:${GITHUB_SEARCH_REPOS_BASE}`, 
+            { body: expected, status: 422 })
+
+        const store = mockStore({ repos: [] })
+
+        await store.dispatch(actions.fetchRepos('java'))
+
+        expect(store.getActions()).to.deep.equal(expectedActions)
+    })
+
     it('should default language to javascript is not specified', async () => {
         const expected = { repos: [] }
         const expectedActions = [

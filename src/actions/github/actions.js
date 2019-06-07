@@ -42,7 +42,12 @@ export const fetchRepos = language => {
         try {
             const response = await fetch(buildQuery(language))
             const body = await response.json()
-            dispatch(fetchReposSuccess(body))
+
+            if (response.status === 200) {
+                dispatch(fetchReposSuccess(body))
+            } else {
+                dispatch(fetchReposFailure(body))
+            }
         } catch (error) {
             dispatch(fetchReposFailure(error))
         }
