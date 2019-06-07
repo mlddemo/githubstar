@@ -1,5 +1,6 @@
 import {
-    GITHUB_SEARCH_REPOS_BASE as GITHUB_SEARCH_REPOS_BASE
+    GITHUB_SEARCH_REPOS_BASE,
+    DEFAULT_LANGUAGE
 } from '../../constants'
 import {
     FETCH_REPOS_REQUEST,
@@ -7,9 +8,10 @@ import {
     FETCH_REPOS_FAILURE
 } from './actionTypes'
 
-const fetchReposRequest = () => {
+const fetchReposRequest = language => {
     return {
-        type: FETCH_REPOS_REQUEST
+        type: FETCH_REPOS_REQUEST,
+        language
     }
 }
 
@@ -27,11 +29,18 @@ const fetchReposFailure = error => {
     }
 }
 
-export const fetchRepos = () => {
+const buildQuery = language => {
+    return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language}`
+}
+
+export const fetchRepos = language => {
     return async dispatch => {
-        dispatch(fetchReposRequest())
+        if (!language) {
+            language = DEFAULT_LANGUAGE
+        }
+        dispatch(fetchReposRequest(language))
         try {
-            const response = await fetch(GITHUB_SEARCH_REPOS_BASE)
+            const response = await fetch(buildQuery(language))
             const body = await response.json()
             dispatch(fetchReposSuccess(body))
         } catch (error) {

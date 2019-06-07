@@ -15,13 +15,13 @@ describe('github fetch repos action', () => {
         fetchMock.restore()
     })
 
-    it('dispatches FETCH_REPOS_SUCCESS when fetching repos completes successfully', () => {
+    it('should dispatch FETCH_REPOS_SUCCESS when fetching repos completes successfully', async () => {
         const expected = { repos: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java' },
             { type: types.FETCH_REPOS_SUCCESS, body: expected }
         ]
-        
+
         fetchMock.getOnce(`begin:${GITHUB_SEARCH_REPOS_BASE}`, {
             body: expected,
             headers: { 'content-type': 'application/json' }
@@ -29,26 +29,62 @@ describe('github fetch repos action', () => {
 
         const store = mockStore({ repos: [] })
 
-        return store.dispatch(actions.fetchRepos()).then(() => {
-            expect(store.getActions()).to.deep.equal(expectedActions)
-        })
+        await store.dispatch(actions.fetchRepos('java'))
+
+        expect(store.getActions()).to.deep.equal(expectedActions)
     })
 
-    it('dispatches FETCH_REPOS_FAILURE when fetching repos produces an error', () => {
+    it('should dispatch FETCH_REPOS_FAILURE when fetching repos produces an error', async () => {
         const expected = new Error('bad request')
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java' },
             { type: types.FETCH_REPOS_FAILURE, error: expected }
         ]
-        
+
         fetchMock.getOnce(`begin:${GITHUB_SEARCH_REPOS_BASE}`, {
             throws: expected
         })
 
         const store = mockStore({ repos: [] })
 
-        return store.dispatch(actions.fetchRepos()).then(() => {
-            expect(store.getActions()).to.deep.equal(expectedActions)
+        await store.dispatch(actions.fetchRepos('java'))
+
+        expect(store.getActions()).to.deep.equal(expectedActions)
+    })
+
+    it('should default language to javascript is not specified', async () => {
+        const expected = { repos: [] }
+        const expectedActions = [
+            { type: types.FETCH_REPOS_REQUEST, language: 'javascript' },
+            { type: types.FETCH_REPOS_SUCCESS, body: expected }
+        ]
+
+        fetchMock.getOnce(`begin:${GITHUB_SEARCH_REPOS_BASE}`, {
+            body: expected,
+            headers: { 'content-type': 'application/json' }
         })
+
+        const store = mockStore({ repos: [] })
+
+        await store.dispatch(actions.fetchRepos())
+
+        expect(store.getActions()).to.deep.equal(expectedActions)
+    })
+
+    it('should specify language in github request params', async () => {
+        const expected = 'pascal'
+
+        fetchMock.getOnce('*', {
+            body: {},
+            headers: { 'content-type': 'application/json' }
+        })
+
+        const store = mockStore({ repos: [] })
+
+        await store.dispatch(actions.fetchRepos(expected))
+
+        expect(
+            fetchMock.called(`begin:${GITHUB_SEARCH_REPOS_BASE}?q=language:${expected}`)
+        ).to.be.true
     })
 })
