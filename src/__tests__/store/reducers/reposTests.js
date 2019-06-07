@@ -31,14 +31,21 @@ describe('repos reducer', () => {
         ).to.deep.equal(expected)
     })
 
-    it('should handle FETCH_REPOS_SUCCESS by settings repos and clearing isFetching', () => {
+    it('should handle FETCH_REPOS_SUCCESS by mapping repos and clearing isFetching', () => {
         const unexpected = {
             repos: [],
             isFetching: true,
             error: {}
         }
+        const repo = {
+            full_name: 'angular/angular.js',
+            description: 'AngularJS - HTML enhanced for web apps!',
+            url: 'https://api.github.com/repos/angular/angular.js',
+            stargazers_count: 59567,
+            created_at: '2010-01-06T00:34:37Z'
+        }
         const expected = {
-            repos: [{ foo: 'bar' }, {}, {}],
+            repos: [repo],
             isFetching: false,
             error: null
         }
@@ -46,7 +53,15 @@ describe('repos reducer', () => {
         expect(
             reducer(unexpected, {
                 type: types.FETCH_REPOS_SUCCESS,
-                body: expected.repos
+                body: {
+                    items: [{
+                        full_name: repo.full_name,
+                        description: repo.description,
+                        url: repo.url,
+                        stargazers_count: repo.stargazers_count,
+                        created_at: repo.created_at
+                    }]
+                }
             })
         ).to.deep.equal(expected)
     })

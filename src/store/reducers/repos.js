@@ -22,7 +22,13 @@ const reducer = (state = initialState, action) => {
         case FETCH_REPOS_SUCCESS:
             return {
                 ...state,
-                repos: action.body,
+                repos: action.body.items.map(item => ({
+                    full_name: item.full_name,
+                    description: item.description,
+                    url: item.url,
+                    stargazers_count: item.stargazers_count,
+                    created_at: item.created_at
+                })),
                 isFetching: false,
                 error: null
             }
