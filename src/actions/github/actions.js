@@ -33,11 +33,8 @@ const buildQuery = language => {
     return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language}`
 }
 
-export const fetchRepos = language => {
+export const fetchRepos = (language = DEFAULT_LANGUAGE) => {
     return async dispatch => {
-        if (!language) {
-            language = DEFAULT_LANGUAGE
-        }
         dispatch(fetchReposRequest(language))
         try {
             const response = await fetch(buildQuery(language))
