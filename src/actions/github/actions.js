@@ -30,7 +30,7 @@ const fetchReposFailure = error => {
 }
 
 const buildQuery = language => {
-    return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language}`
+    return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language}&sort=stars&page=1&per_page=3`
 }
 
 export const fetchRepos = (language = DEFAULT_LANGUAGE) => {

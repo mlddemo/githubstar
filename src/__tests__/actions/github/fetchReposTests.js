@@ -104,4 +104,19 @@ describe('github fetch repos action', () => {
             fetchMock.called(`begin:${GITHUB_SEARCH_REPOS_BASE}?q=language:${expected}`)
         ).to.be.true
     })
+
+    it('should request top three most starred repos in github', async () => {
+        fetchMock.getOnce('*', {
+            body: {},
+            headers: { 'content-type': 'application/json' }
+        })
+
+        const store = mockStore({ repos: [] })
+
+        await store.dispatch(actions.fetchRepos())
+
+        expect(fetchMock.called(/.*&per_page=3(&|$).*/)).to.be.true
+        expect(fetchMock.called(/.*&page=1(&|$).*/)).to.be.true
+        expect(fetchMock.called(/.*&sort=stars(&|$).*/)).to.be.true
+    })
 })
