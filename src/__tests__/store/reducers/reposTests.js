@@ -48,7 +48,7 @@ describe('repos reducer', () => {
         const repo = {
             full_name: 'angular/angular.js',
             description: 'AngularJS - HTML enhanced for web apps!',
-            url: 'https://api.github.com/repos/angular/angular.js',
+            html_url: 'https://api.github.com/repos/angular/angular.js',
             stargazers_count: 59567,
             created_at: '2010-01-06T00:34:37Z'
         }
@@ -65,7 +65,7 @@ describe('repos reducer', () => {
                     items: [{
                         full_name: repo.full_name,
                         description: repo.description,
-                        url: repo.url,
+                        html_url: repo.html_url,
                         stargazers_count: repo.stargazers_count,
                         created_at: repo.created_at
                     }]
