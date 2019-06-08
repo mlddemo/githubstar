@@ -11,14 +11,27 @@ const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
 describe('github fetch repos action', () => {
+    let realDateNow
+
+    const mockDate = date => {
+        const dateNowStub = jest.fn(() => date)
+        global.Date.now = dateNowStub
+    }
+
+    beforeEach(() => {
+        realDateNow = Date.now.bind(global.Date)
+        mockDate(new Date(2019, 6-1, 14))
+    })
+
     afterEach(() => {
         fetchMock.restore()
+        global.Date.now = realDateNow
     })
 
     it('should dispatch FETCH_REPOS_SUCCESS when fetching repos completes successfully', async () => {
         const expected = { repos: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'java' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: '2019-05-14' },
             { type: types.FETCH_REPOS_SUCCESS, body: expected }
         ]
 
@@ -37,7 +50,7 @@ describe('github fetch repos action', () => {
     it('should dispatch FETCH_REPOS_FAILURE when fetching repos produces an error', async () => {
         const expected = new Error('bad request')
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'java' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: '2019-05-14' },
             { type: types.FETCH_REPOS_FAILURE, error: expected }
         ]
 
@@ -55,7 +68,7 @@ describe('github fetch repos action', () => {
     it('should dispatch FETCH_REPOS_FAILURE when fetching repos returns a validation message', async () => {
         const expected = { message: 'Validation Failed', errors: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'java' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: '2019-05-14' },
             { type: types.FETCH_REPOS_FAILURE, error: expected }
         ]
 
@@ -72,7 +85,7 @@ describe('github fetch repos action', () => {
     it('should default language to javascript is not specified', async () => {
         const expected = { repos: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'javascript' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'javascript', created: '2019-05-14' },
             { type: types.FETCH_REPOS_SUCCESS, body: expected }
         ]
 
@@ -121,9 +134,7 @@ describe('github fetch repos action', () => {
     })
 
     it('should request repos created in the past month from github', async () => {
-        const realDateNow = Date.now.bind(global.Date);
-        const dateNowStub = jest.fn(() => new Date(2019, 6-1, 14));
-        global.Date.now = dateNowStub;
+        mockDate(new Date(2019, 6-1, 14))
         
         fetchMock.getOnce('*', {
             body: {},
@@ -135,15 +146,11 @@ describe('github fetch repos action', () => {
         await store.dispatch(actions.fetchRepos())
 
         expect(fetchMock.called(/.%20*created\:%3E2019\-05\-14(&|$).*/)).to.be.true
-
-        global.Date.now = realDateNow
     })
 
     it('should request repos created in the past month from github accounting for differing month length', async () => {
-        const realDateNow = Date.now.bind(global.Date);
-        const dateNowStub = jest.fn(() => new Date(2019, 3-1, 31));
-        global.Date.now = dateNowStub;
-        
+        mockDate(new Date(2019, 3-1, 31))
+
         fetchMock.getOnce('*', {
             body: {},
             headers: { 'content-type': 'application/json' }
@@ -154,7 +161,5 @@ describe('github fetch repos action', () => {
         await store.dispatch(actions.fetchRepos())
 
         expect(fetchMock.called(/.%20*created\:%3E2019\-02\-28(&|$).*/)).to.be.true
-
-        global.Date.now = realDateNow
     })
 })
