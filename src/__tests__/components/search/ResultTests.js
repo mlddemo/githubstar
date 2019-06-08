@@ -21,8 +21,8 @@ describe('Result', () => {
     })
 
     it('should render full name', () => {
-        const div = shallowRender().find('div')
-        expect(div).to.have.length(1)
-        expect(div.text()).to.be.equal(props.repo.full_name)
+        const title = shallowRender().find('Card')
+        expect(title).to.have.length(1)
+        expect(title.text()).to.be.equal(props.repo.full_name)
     })
 })

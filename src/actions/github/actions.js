@@ -9,10 +9,11 @@ import {
     FETCH_REPOS_FAILURE,
 } from './actionTypes'
 
-const fetchReposRequest = language => {
+const fetchReposRequest = (language, created) => {
     return {
         type: FETCH_REPOS_REQUEST,
-        language
+        language,
+        created
     }
 }
 
@@ -30,16 +31,21 @@ const fetchReposFailure = error => {
     }
 }
 
-const buildQuery = language => {
+const getFilterDate = () => {
     const now = Date.now()
-    const date = moment(now).subtract(1, 'months').format('YYYY-MM-DD')
+    return moment(now).subtract(1, 'months')
+}
 
+const buildQuery = language => {
+    const date = getFilterDate().format('YYYY-MM-DD')
     return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language} created:>${date}&sort=stars&page=1&per_page=3`
 }
 
 export const fetchRepos = (language = DEFAULT_LANGUAGE) => {
     return async dispatch => {
-        dispatch(fetchReposRequest(language))
+        dispatch(
+            fetchReposRequest(language, getFilterDate())
+        )
         try {
             const response = await fetch(buildQuery(language))
             const body = await response.json()

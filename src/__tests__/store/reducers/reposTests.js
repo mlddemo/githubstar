@@ -9,7 +9,8 @@ describe('repos reducer', () => {
             repos: [],
             isFetching: false,
             error: null,
-            language: 'javascript'
+            language: 'javascript',
+            created: null
         })
     })
 
@@ -18,19 +19,22 @@ describe('repos reducer', () => {
             repos: [{}, {}],
             isFetching: false,
             error: {},
-            language: 'javascript'
+            language: 'javascript',
+            created: null
         }
         const expected = {
             repos: [],
             isFetching: true,
             error: null,
-            language: 'csharp'
+            language: 'csharp',
+            created: '2019-05-14'
         }
 
         expect(
             reducer(unexpected, {
                 type: types.FETCH_REPOS_REQUEST,
-                language: 'csharp'
+                language: 'csharp',
+                created: '2019-05-14'
             })
         ).to.deep.equal(expected)
     })

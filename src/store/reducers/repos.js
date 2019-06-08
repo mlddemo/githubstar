@@ -8,7 +8,8 @@ const initialState = {
     repos: [],
     isFetching: false,
     error: null,
-    language: 'javascript'
+    language: 'javascript',
+    created: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -19,7 +20,8 @@ const reducer = (state = initialState, action) => {
                 repos: [],
                 isFetching: true,
                 error: null,
-                language: action.language
+                language: action.language,
+                created: action.created
             }
         case FETCH_REPOS_SUCCESS:
             return {
