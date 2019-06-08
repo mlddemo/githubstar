@@ -9,7 +9,7 @@ const initialState = {
     isFetching: false,
     error: null,
     language: 'javascript',
-    created: ''
+    created: null
 }
 
 const reducer = (state = initialState, action) => {

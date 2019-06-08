@@ -33,11 +33,11 @@ const fetchReposFailure = error => {
 
 const getFilterDate = () => {
     const now = Date.now()
-    return moment(now).subtract(1, 'months').format('YYYY-MM-DD')
+    return moment(now).subtract(1, 'months')
 }
 
 const buildQuery = language => {
-    const date = getFilterDate()
+    const date = getFilterDate().format('YYYY-MM-DD')
     return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language} created:>${date}&sort=stars&page=1&per_page=3`
 }
 

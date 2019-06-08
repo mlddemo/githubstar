@@ -10,7 +10,7 @@ describe('repos reducer', () => {
             isFetching: false,
             error: null,
             language: 'javascript',
-            created: ''
+            created: null
         })
     })
 
@@ -20,7 +20,7 @@ describe('repos reducer', () => {
             isFetching: false,
             error: {},
             language: 'javascript',
-            created: ''
+            created: null
         }
         const expected = {
             repos: [],

@@ -2,6 +2,7 @@ import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
 import { expect } from 'chai'
+import moment from 'moment'
 
 import { GITHUB_SEARCH_REPOS_BASE } from '../../../constants'
 import * as actions from '../../../actions/github/actions'
@@ -12,9 +13,13 @@ const mockStore = configureMockStore(middlewares)
 
 describe('github fetch repos action', () => {
     let realDateNow
+    let currentDate
+    let expectedDate
 
     const mockDate = date => {
         const dateNowStub = jest.fn(() => date)
+        currentDate = date
+        expectedDate = moment(date).subtract(1, 'months')
         global.Date.now = dateNowStub
     }
 
@@ -31,7 +36,7 @@ describe('github fetch repos action', () => {
     it('should dispatch FETCH_REPOS_SUCCESS when fetching repos completes successfully', async () => {
         const expected = { repos: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: '2019-05-14' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: expectedDate },
             { type: types.FETCH_REPOS_SUCCESS, body: expected }
         ]
 
@@ -50,7 +55,7 @@ describe('github fetch repos action', () => {
     it('should dispatch FETCH_REPOS_FAILURE when fetching repos produces an error', async () => {
         const expected = new Error('bad request')
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: '2019-05-14' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: expectedDate },
             { type: types.FETCH_REPOS_FAILURE, error: expected }
         ]
 
@@ -68,7 +73,7 @@ describe('github fetch repos action', () => {
     it('should dispatch FETCH_REPOS_FAILURE when fetching repos returns a validation message', async () => {
         const expected = { message: 'Validation Failed', errors: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: '2019-05-14' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'java', created: expectedDate },
             { type: types.FETCH_REPOS_FAILURE, error: expected }
         ]
 
@@ -85,7 +90,7 @@ describe('github fetch repos action', () => {
     it('should default language to javascript is not specified', async () => {
         const expected = { repos: [] }
         const expectedActions = [
-            { type: types.FETCH_REPOS_REQUEST, language: 'javascript', created: '2019-05-14' },
+            { type: types.FETCH_REPOS_REQUEST, language: 'javascript', created: expectedDate },
             { type: types.FETCH_REPOS_SUCCESS, body: expected }
         ]
 
