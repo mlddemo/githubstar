@@ -47,6 +47,6 @@ describe('Result', () => {
     it('should render stargazer count', () => {
         const stars = shallowRender().find('.stars')
         expect(stars).to.have.length(1)
-        expect(stars.text()).to.be.equal(`*${props.repo.stargazers_count}`)
+        expect(stars.text()).to.be.equal(`${props.repo.stargazers_count}`)
     })
 })
