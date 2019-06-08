@@ -5,7 +5,7 @@ import {
 import {
     FETCH_REPOS_REQUEST,
     FETCH_REPOS_SUCCESS,
-    FETCH_REPOS_FAILURE
+    FETCH_REPOS_FAILURE,
 } from './actionTypes'
 
 const fetchReposRequest = language => {

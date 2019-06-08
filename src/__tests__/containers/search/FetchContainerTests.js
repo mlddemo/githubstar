@@ -7,21 +7,21 @@ import { shallow, configure } from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 
-import SearchContainer, { PureSearchContainer } from '../../../containers/search/SearchContainer'
+import FetchContainer, { PureFetchContainer } from '../../../containers/search/FetchContainer'
 const expect = chai.expect
 chai.use(sinonChai)
 
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
-describe('SearchContainer', () => {
+describe('FetchContainer', () => {
     let props
     let dispatch
 
-    const shallowRender = () => shallow(<PureSearchContainer dispatch={() => { }} {...props} />)
+    const shallowRender = () => shallow(<PureFetchContainer dispatch={() => { }} {...props} />)
     const shallowWithStore = store => {
         dispatch = sinon.spy()
-        return shallow(<SearchContainer {...props} store={store} dispatch={dispatch} />);
+        return shallow(<FetchContainer {...props} store={store} dispatch={dispatch} />);
     };
 
     beforeEach(() => {
@@ -30,24 +30,25 @@ describe('SearchContainer', () => {
         props = {}
     })
 
-    it('should render Search component', () => {
-        const container = shallowRender()
-        const component = container.find('Search')
-
-        expect(component).to.have.length(1)
-    })
-
     it('should correctly map store to props', () => {
         const store = mockStore({
             repos: {
-                repos: [{
-                    full_name: 'foo'
-                }, {
-                    full_name: 'bar'
-                }]
+                language: 'python'
             }
         })
         const container = shallowWithStore(store)
         expect(container.prop()).to.deep.equal(store.repos)
+    })
+
+    it('should dispatch fetch repos action with correct language', () => {
+        const expected = 'csharp'
+
+        const fetchRepos = sinon.spy()
+        props.fetchRepos = fetchRepos
+        props.language = expected
+        
+        shallowRender()
+
+        expect(fetchRepos).to.have.been.calledWith(expected)
     })
 })

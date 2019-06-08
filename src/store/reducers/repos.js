@@ -1,13 +1,14 @@
 import {
     FETCH_REPOS_REQUEST,
     FETCH_REPOS_SUCCESS,
-    FETCH_REPOS_FAILURE
+    FETCH_REPOS_FAILURE,
 } from '../../actions/github/actionTypes'
 
 const initialState = {
     repos: [],
     isFetching: false,
-    error: null
+    error: null,
+    language: 'javascript'
 }
 
 const reducer = (state = initialState, action) => {
@@ -17,7 +18,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 repos: [],
                 isFetching: true,
-                error: null
+                error: null,
+                language: action.language
             }
         case FETCH_REPOS_SUCCESS:
             return {
