@@ -29,7 +29,7 @@ const reducer = (state = initialState, action) => {
                 repos: action.body.items.map(item => ({
                     full_name: item.full_name,
                     description: item.description,
-                    url: item.url,
+                    html_url: item.html_url,
                     stargazers_count: item.stargazers_count,
                     created_at: item.created_at
                 })),
