@@ -2,6 +2,7 @@ import React from 'react'
 import Adapter from 'enzyme-adapter-react-16'
 import { expect } from 'chai'
 import { shallow, configure } from 'enzyme'
+import moment from 'moment'
 
 import Criteria from '../../../components/search/Criteria'
 
@@ -15,7 +16,7 @@ describe('Criteria', () => {
 
         props = {
             language: 'javascript',
-            created: '2019-05-14'
+            created: moment('2019-05-14')
         }
     })
 
@@ -28,6 +29,12 @@ describe('Criteria', () => {
     it('should render search created date', () => {
         const div = shallowRender().find('.created')
         expect(div).to.have.length(1)
-        expect(div.text()).to.be.equal(`Repos created since ${props.created}`)
+        expect(div.text()).to.be.equal(`Repos created since 14th May 2019`)
+    })
+
+    it('should handle null dates', () => {
+        props.created = null
+        const div = shallowRender().find('.created')
+        expect(div).to.have.length(0)
     })
 })
