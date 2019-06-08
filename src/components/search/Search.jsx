@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Result from './Result'
+import Criteria from './Criteria'
 
 const renderResults = repos => {
     return repos.map(repo =>
@@ -9,7 +10,10 @@ const renderResults = repos => {
 }
 
 const Search = props => (
-    <div>{renderResults(props.repos)}</div>
+    <>
+        <Criteria language={props.language} />
+        <div className='results'>{renderResults(props.repos)}</div>
+    </>
 )
 
 export default Search
