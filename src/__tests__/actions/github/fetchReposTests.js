@@ -119,4 +119,42 @@ describe('github fetch repos action', () => {
         expect(fetchMock.called(/.*&page=1(&|$).*/)).to.be.true
         expect(fetchMock.called(/.*&sort=stars(&|$).*/)).to.be.true
     })
+
+    it('should request repos created in the past month from github', async () => {
+        const realDateNow = Date.now.bind(global.Date);
+        const dateNowStub = jest.fn(() => new Date(2019, 6-1, 14));
+        global.Date.now = dateNowStub;
+        
+        fetchMock.getOnce('*', {
+            body: {},
+            headers: { 'content-type': 'application/json' }
+        })
+
+        const store = mockStore({ repos: [] })
+
+        await store.dispatch(actions.fetchRepos())
+
+        expect(fetchMock.called(/.%20*created\:%3E2019\-05\-14(&|$).*/)).to.be.true
+
+        global.Date.now = realDateNow
+    })
+
+    it('should request repos created in the past month from github accounting for differing month length', async () => {
+        const realDateNow = Date.now.bind(global.Date);
+        const dateNowStub = jest.fn(() => new Date(2019, 3-1, 31));
+        global.Date.now = dateNowStub;
+        
+        fetchMock.getOnce('*', {
+            body: {},
+            headers: { 'content-type': 'application/json' }
+        })
+
+        const store = mockStore({ repos: [] })
+
+        await store.dispatch(actions.fetchRepos())
+
+        expect(fetchMock.called(/.%20*created\:%3E2019\-02\-28(&|$).*/)).to.be.true
+
+        global.Date.now = realDateNow
+    })
 })

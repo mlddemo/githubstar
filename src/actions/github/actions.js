@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {
     GITHUB_SEARCH_REPOS_BASE,
     DEFAULT_LANGUAGE
@@ -30,7 +31,10 @@ const fetchReposFailure = error => {
 }
 
 const buildQuery = language => {
-    return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language}&sort=stars&page=1&per_page=3`
+    const now = Date.now()
+    const date = moment(now).subtract(1, 'months').format('YYYY-MM-DD')
+
+    return `${GITHUB_SEARCH_REPOS_BASE}?q=language:${language} created:>${date}&sort=stars&page=1&per_page=3`
 }
 
 export const fetchRepos = (language = DEFAULT_LANGUAGE) => {
