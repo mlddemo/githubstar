@@ -11,7 +11,7 @@ const renderResults = repos => {
 
 const Search = props => (
     <>
-        <Criteria language={props.language} />
+        <Criteria language={props.language} created={props.created} />
         <div className='results'>{renderResults(props.repos)}</div>
     </>
 )

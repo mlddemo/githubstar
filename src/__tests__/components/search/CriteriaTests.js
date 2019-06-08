@@ -14,13 +14,20 @@ describe('Criteria', () => {
         configure({ adapter: new Adapter() });
 
         props = {
-            language: 'javascript'
+            language: 'javascript',
+            created: '2019-05-14'
         }
     })
 
     it('should render search language', () => {
-        const div = shallowRender().find('div')
+        const div = shallowRender().find('.language')
         expect(div).to.have.length(1)
         expect(div.text()).to.be.equal('Most Stars for \'javascript\'')
+    })
+
+    it('should render search created date', () => {
+        const div = shallowRender().find('.created')
+        expect(div).to.have.length(1)
+        expect(div.text()).to.be.equal(`Repos created since ${props.created}`)
     })
 })

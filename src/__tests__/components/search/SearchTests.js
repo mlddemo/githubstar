@@ -15,6 +15,7 @@ describe('Search', () => {
 
         props = {
             language: 'python',
+            created: '2019-05-14',
             repos: [{
                 full_name: 'angular/angular.js'
             }, {
@@ -36,7 +37,8 @@ describe('Search', () => {
 
     it('should render the search criteria', () => {
         const expected = {
-            language: 'python'
+            language: 'python',
+            created: '2019-05-14'
         }
         
         const criteria = shallowRender().find('Criteria')
