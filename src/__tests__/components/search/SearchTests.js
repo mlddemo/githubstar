@@ -46,4 +46,25 @@ describe('Search', () => {
         expect(criteria).to.have.length(1)
         expect(criteria.props()).to.deep.equal(expected)
     })
+    
+    it('should render a loading spinner if search is in progress', () => {
+        props.isFetching = true
+
+        const div = shallowRender().find('.results')
+        const results = div.find('Result')
+        const loading = div.find('.loading')
+        
+        expect(results).to.have.length(0)
+        expect(loading).to.have.length(1)
+    })
+
+    it('should render error message if search fails', () => {
+        const expected = 'This is an error'
+        props.error = { message: expected }
+
+        const error = shallowRender().find('.error')
+        
+        expect(error).to.have.length(1)
+        expect(error.text()).to.be.equal(expected)
+    })
 })
