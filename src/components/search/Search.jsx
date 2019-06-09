@@ -31,6 +31,22 @@ const renderLoading = () => (
     </CentreDiv>
 )
 
+const renderError = message => {
+    return <div className='error'>{message}</div>
+}
+
+const renderSearch = props => {
+    if (props.error) {
+        return renderError(props.error.message)
+    }
+
+    return <div className='results'>
+        {props.isFetching
+            ? renderLoading()
+            : renderResults(props.repos)}
+    </div>
+}
+
 const Search = props => (
     <Container>
         <MarginRow>
@@ -38,11 +54,7 @@ const Search = props => (
                 <Criteria language={props.language} created={props.created} />
             </Col>
         </MarginRow>
-        <div className='results'>
-            {props.isFetching
-                ? renderLoading()
-                : renderResults(props.repos)}
-        </div>
+        {renderSearch(props)}
     </Container>
 )
 
