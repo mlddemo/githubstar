@@ -1,3 +1,30 @@
+# GitHub Stars Demo
+
+Displays three most starred GitHub repos created within the past month for a given language.  Languages can be specified via routing e.g. to search for `python`:
+
+`http://localhost:3000/python`
+
+The default language is `javascript`.
+
+## Travis CI
+
+[![Build Status](https://travis-ci.org/mlddemo/githubstar.svg?branch=master)](https://travis-ci.org/mlddemo/githubstar)
+
+## Run Application
+
+```
+npm install
+npm start
+```
+
+## Test Application
+
+```
+npm test -- --coverage
+```
+
+## Scafolding README..
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
